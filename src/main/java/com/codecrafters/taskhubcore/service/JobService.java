@@ -66,7 +66,7 @@ public class JobService {
         UserEntity crafter = userRepository.findById(job.getCrafter().getId()).orElseThrow();
         crafter.getJobsCreated().remove(job);
         List<UserEntity> users = userRepository.findAll();
-        users.stream().map(user -> user.getJobsSubscribed().remove(job));
+        users.forEach(user -> user.getJobsSubscribed().remove(job));
         userRepository.saveAll(users);
         jobRepository.deleteById(id);
     }

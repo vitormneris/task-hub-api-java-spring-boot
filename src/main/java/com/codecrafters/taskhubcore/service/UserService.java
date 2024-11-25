@@ -7,6 +7,8 @@ import com.codecrafters.taskhubcore.model.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -24,6 +26,7 @@ public class UserService {
     public UserEntity subscribeJob(String userId, String jobId) {
         JobEntity jobEntity = jobRepository.findById(jobId).orElseThrow();
         UserEntity userEntity = userRepository.findById(userId).orElseThrow();
+        jobEntity.getSubscribers().add(userEntity);
         userEntity.getJobsSubscribed().add(jobEntity);
         return userRepository.save(userEntity);
     }
@@ -31,6 +34,7 @@ public class UserService {
     public UserEntity unsubscribeJob(String userId, String jobId) {
         JobEntity jobEntity = jobRepository.findById(jobId).orElseThrow();
         UserEntity userEntity = userRepository.findById(userId).orElseThrow();
+        jobEntity.getSubscribers().remove(userEntity);
         userEntity.getJobsSubscribed().remove(jobEntity);
         return userRepository.save(userEntity);
     }
@@ -59,6 +63,11 @@ public class UserService {
     }
 
     public void delete(String id) {
-        userRepository.delete(findById(id));
+        UserEntity userEntity = userRepository.findById(id).orElseThrow();
+        List<String> jobsId = userEntity.getJobsSubscribed().stream().map(JobEntity::getId).toList();
+        List<JobEntity> jobs = jobRepository.findAllById(jobsId);
+        jobs.forEach(job -> job.getSubscribers().remove(userEntity));
+        jobRepository.saveAll(jobs);
+        userRepository.deleteById(id);
     }
 }

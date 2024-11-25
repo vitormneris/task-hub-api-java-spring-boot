@@ -5,6 +5,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @Builder
@@ -30,4 +32,6 @@ public class JobEntity {
     private Boolean available;
     @Field(name = "criador")
     private UserEntity crafter;
+    @Field(name = "inscritos")
+    private Set<UserEntity> subscribers;
 }
