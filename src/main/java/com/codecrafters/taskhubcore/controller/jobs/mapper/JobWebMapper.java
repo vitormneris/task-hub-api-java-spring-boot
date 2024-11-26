@@ -1,9 +1,7 @@
 package com.codecrafters.taskhubcore.controller.jobs.mapper;
 
-import com.codecrafters.taskhubcore.controller.jobs.dto.AddressDTO;
 import com.codecrafters.taskhubcore.controller.jobs.dto.JobDTO;
 import com.codecrafters.taskhubcore.controller.usuarios.dto.UserDTO;
-import com.codecrafters.taskhubcore.model.entities.AddressEntity;
 import com.codecrafters.taskhubcore.model.entities.JobEntity;
 import com.codecrafters.taskhubcore.model.entities.UserEntity;
 import com.codecrafters.taskhubcore.model.repositories.UserRepository;
@@ -21,14 +19,6 @@ public class JobWebMapper {
     private final UserRepository userRepository;
 
     public JobEntity toEntity(JobDTO jobDTO) {
-        AddressEntity addressEntity = AddressEntity.builder()
-                .state(jobDTO.address().state())
-                .city(jobDTO.address().city())
-                .neighborhood(jobDTO.address().neighborhood())
-                .complement(jobDTO.address().complement())
-                .build();
-
-
         return JobEntity.builder()
                 .title(jobDTO.title())
                 .moment(jobDTO.moment())
@@ -36,7 +26,7 @@ public class JobWebMapper {
                 .imageUrl(jobDTO.imageUrl())
                 .payment(jobDTO.payment())
                 .available(jobDTO.available())
-                .address(addressEntity)
+                .address(jobDTO.address())
                 .crafterId(jobDTO.crafter().id())
                 .build();
     }
@@ -49,14 +39,6 @@ public class JobWebMapper {
 
 
     public JobDTO toDTO(JobEntity jobEntity) {
-        AddressDTO addressDTO = AddressDTO.builder()
-                .state(jobEntity.getAddress().getState())
-                .city(jobEntity.getAddress().getCity())
-                .neighborhood(jobEntity.getAddress().getNeighborhood())
-                .complement(jobEntity.getAddress().getComplement())
-                .build();
-
-
         UserEntity crafter = userRepository.findById(jobEntity.getCrafterId()).orElseThrow();
 
         return JobDTO.builder()
@@ -67,7 +49,7 @@ public class JobWebMapper {
                 .imageUrl(jobEntity.getImageUrl())
                 .payment(jobEntity.getPayment())
                 .available(jobEntity.getAvailable())
-                .address(addressDTO)
+                .address(jobEntity.getAddress())
                 .crafter(UserDTO.builder()
                         .id(crafter.getId())
                         .name(crafter.getName())
