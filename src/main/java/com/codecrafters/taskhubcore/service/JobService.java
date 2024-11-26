@@ -2,7 +2,6 @@ package com.codecrafters.taskhubcore.service;
 
 import com.codecrafters.taskhubcore.controller.jobs.dto.JobDTO;
 import com.codecrafters.taskhubcore.controller.jobs.mapper.JobWebMapper;
-import com.codecrafters.taskhubcore.model.entities.AddressEntity;
 import com.codecrafters.taskhubcore.model.entities.JobEntity;
 import com.codecrafters.taskhubcore.model.entities.UserEntity;
 import com.codecrafters.taskhubcore.model.repositories.JobRepository;
@@ -52,17 +51,7 @@ public class JobService {
         jobOld.setPayment(jobNew.payment() == null ? jobOld.getPayment() : jobNew.payment());
         jobOld.setMoment(jobNew.moment() == null ? jobOld.getMoment() : jobNew.moment());
         jobOld.setDetails(jobNew.details() == null ? jobOld.getDetails() : jobNew.details());
-
-        if (jobNew.address() != null) {
-            AddressEntity addressEntity =AddressEntity.builder()
-                    .state(jobNew.address().state() == null ? jobOld.getAddress().getState() : jobNew.address().state())
-                    .city(jobNew.address().city() == null ? jobOld.getAddress().getCity() : jobNew.address().city())
-                    .neighborhood(jobNew.address().neighborhood() == null ? jobOld.getAddress().getNeighborhood() : jobNew.address().neighborhood())
-                    .complement(jobNew.address().complement() == null ? jobOld.getAddress().getComplement() : jobNew.address().complement())
-                    .build();
-
-            jobOld.setAddress(addressEntity);
-        }
+        jobOld.setAddress(jobNew.address() == null ? jobOld.getAddress() : jobNew.address());
 
         return mapper.toDTO(jobRepository.save(jobOld));
     }

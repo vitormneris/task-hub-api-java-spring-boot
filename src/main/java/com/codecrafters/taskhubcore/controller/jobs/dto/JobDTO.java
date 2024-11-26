@@ -14,7 +14,7 @@ public record JobDTO(
         String imageUrl,
         Double payment,
         Boolean available,
-        AddressDTO address,
+        String address,
         UserDTO crafter,
         Set<UserDTO> subscribers
 ) {

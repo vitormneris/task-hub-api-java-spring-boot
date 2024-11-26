@@ -32,7 +32,7 @@ public class JobEntity {
     @Field(name = "disponibilidade")
     private Boolean available;
     @Field(name = "endereco")
-    private AddressEntity address;
+    private String address;
     @Field(name = "criador")
     private String crafterId;
     @Field(name = "inscritos")
