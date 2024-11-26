@@ -1,5 +1,7 @@
 package com.codecrafters.taskhubcore.service;
 
+import com.codecrafters.taskhubcore.controller.jobs.dto.JobDTO;
+import com.codecrafters.taskhubcore.controller.jobs.mapper.JobWebMapper;
 import com.codecrafters.taskhubcore.model.entities.AddressEntity;
 import com.codecrafters.taskhubcore.model.entities.JobEntity;
 import com.codecrafters.taskhubcore.model.entities.UserEntity;
@@ -8,7 +10,6 @@ import com.codecrafters.taskhubcore.model.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -16,61 +17,62 @@ import java.util.List;
 public class JobService {
     private final JobRepository jobRepository;
     private final UserRepository userRepository;
+    private final JobWebMapper mapper;
 
-    public List<JobEntity> findAll() {
-        return jobRepository.findAll();
+    public List<JobDTO> findAll() {
+        return mapper.toListDTO(jobRepository.findAll());
     }
 
-    public JobEntity findById(String id) {
-        return jobRepository.findById(id).orElseThrow();
+    public JobDTO findById(String id) {
+        return mapper.toDTO(jobRepository.findById(id).orElseThrow());
     }
 
-    public JobEntity save(JobEntity jobEntity) {
-        UserEntity user = userRepository.findById(jobEntity.getCrafter().getId()).orElseThrow();
-        jobEntity.setId(null);
-        jobEntity.setCrafter(user);
+    public JobDTO save(JobDTO jobDTO) {
+        UserEntity user = userRepository.findById(jobDTO.crafter().id()).orElseThrow();
+        JobEntity jobEntity = mapper.toEntity(jobDTO);
         jobEntity.setAvailable(true);
         JobEntity jobSaved = jobRepository.save(jobEntity);
-        if (user.getJobsCreated() == null) user.setJobsCreated(new HashSet<>());
-        user.getJobsCreated().add(jobSaved);
+
+        user.getJobsIdCreated().add(jobSaved.getId());
         userRepository.save(user);
-        return jobSaved;
+        return mapper.toDTO(jobSaved);
     }
 
-    public JobEntity updateAvailable(String id) {
-        JobEntity jobOld = findById(id);
-        jobOld.setAvailable(!jobOld.getAvailable());
-        return jobRepository.save(jobOld);
+    public JobDTO updateAvailable(String id) {
+        JobEntity job = jobRepository.findById(id).orElseThrow();
+        job.setAvailable(!job.getAvailable());
+        return mapper.toDTO(job);
     }
 
-    public JobEntity update(JobEntity jobNew, String id) {
-        JobEntity jobOld = findById(id);
-        jobOld.setTitle(jobNew.getTitle() == null ? jobOld.getTitle() : jobNew.getTitle());
-        jobOld.setImageUrl(jobNew.getTitle() == null ? jobOld.getImageUrl() : jobNew.getImageUrl());
-        jobOld.setPayment(jobNew.getTitle() == null ? jobOld.getPayment() : jobNew.getPayment());
-        jobOld.setMoment(jobNew.getMoment() == null ? jobOld.getMoment() : jobNew.getMoment());
-        jobOld.setDetails(jobNew.getDetails() == null ? jobOld.getDetails() : jobNew.getDetails());
+    public JobDTO update(JobDTO jobNew, String id) {
+        JobEntity jobOld = jobRepository.findById(id).orElseThrow();
+        jobOld.setTitle(jobNew.title() == null ? jobOld.getTitle() : jobNew.title());
+        jobOld.setImageUrl(jobNew.imageUrl() == null ? jobOld.getImageUrl() : jobNew.imageUrl());
+        jobOld.setPayment(jobNew.payment() == null ? jobOld.getPayment() : jobNew.payment());
+        jobOld.setMoment(jobNew.moment() == null ? jobOld.getMoment() : jobNew.moment());
+        jobOld.setDetails(jobNew.details() == null ? jobOld.getDetails() : jobNew.details());
 
-        if (jobNew.getAddress() != null) {
+        if (jobNew.address() != null) {
             AddressEntity addressEntity =AddressEntity.builder()
-                    .state(jobNew.getAddress().getState() == null ? jobOld.getAddress().getState() : jobNew.getAddress().getState())
-                    .city(jobNew.getAddress().getCity() == null ? jobOld.getAddress().getCity() : jobNew.getAddress().getCity())
-                    .neighborhood(jobNew.getAddress().getNeighborhood() == null ? jobOld.getAddress().getNeighborhood() : jobNew.getAddress().getNeighborhood())
-                    .complement(jobNew.getAddress().getComplement() == null ? jobOld.getAddress().getComplement() : jobNew.getAddress().getComplement())
+                    .state(jobNew.address().state() == null ? jobOld.getAddress().getState() : jobNew.address().state())
+                    .city(jobNew.address().city() == null ? jobOld.getAddress().getCity() : jobNew.address().city())
+                    .neighborhood(jobNew.address().neighborhood() == null ? jobOld.getAddress().getNeighborhood() : jobNew.address().neighborhood())
+                    .complement(jobNew.address().complement() == null ? jobOld.getAddress().getComplement() : jobNew.address().complement())
                     .build();
 
             jobOld.setAddress(addressEntity);
         }
 
-        return jobRepository.save(jobOld);
+        return mapper.toDTO(jobRepository.save(jobOld));
     }
 
     public void delete(String id) {
         JobEntity job = jobRepository.findById(id).orElseThrow();
-        UserEntity crafter = userRepository.findById(job.getCrafter().getId()).orElseThrow();
-        crafter.getJobsCreated().remove(job);
+        UserEntity crafter = userRepository.findById(job.getCrafterId()).orElseThrow();
+        crafter.getJobsIdCreated().remove(job.getId());
+        userRepository.save(crafter);
         List<UserEntity> users = userRepository.findAll();
-        users.forEach(user -> user.getJobsSubscribed().remove(job));
+        users.forEach(user -> user.getJobsIdSubscribed().remove(job.getId()));
         userRepository.saveAll(users);
         jobRepository.deleteById(id);
     }

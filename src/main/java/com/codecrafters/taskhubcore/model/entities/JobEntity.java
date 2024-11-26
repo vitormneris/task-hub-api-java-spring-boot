@@ -1,10 +1,13 @@
 package com.codecrafters.taskhubcore.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -31,7 +34,7 @@ public class JobEntity {
     @Field(name = "endereco")
     private AddressEntity address;
     @Field(name = "criador")
-    private UserEntity crafter;
+    private String crafterId;
     @Field(name = "inscritos")
-    private Set<UserEntity> subscribers;
+    private Set<String> subscribersId = new HashSet<>();
 }
