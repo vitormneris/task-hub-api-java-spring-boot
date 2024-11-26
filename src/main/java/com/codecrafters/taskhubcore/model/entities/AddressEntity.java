@@ -15,12 +15,6 @@ public class AddressEntity {
     private String city;
     @Field(name = "bairro")
     private String neighborhood;
-    @Field(name = "rua")
-    private String street;
-    @Field(name = "CEP")
-    private String postalCode;
-    @Field(name = "numero_residencia")
-    private Integer number;
     @Field(name = "complemento")
     private String complement;
 }

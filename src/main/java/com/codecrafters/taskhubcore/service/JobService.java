@@ -8,6 +8,7 @@ import com.codecrafters.taskhubcore.model.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -15,6 +16,10 @@ import java.util.List;
 public class JobService {
     private final JobRepository jobRepository;
     private final UserRepository userRepository;
+
+    public List<JobEntity> findAll() {
+        return jobRepository.findAll();
+    }
 
     public JobEntity findById(String id) {
         return jobRepository.findById(id).orElseThrow();
@@ -24,7 +29,9 @@ public class JobService {
         UserEntity user = userRepository.findById(jobEntity.getCrafter().getId()).orElseThrow();
         jobEntity.setId(null);
         jobEntity.setCrafter(user);
+        jobEntity.setAvailable(true);
         JobEntity jobSaved = jobRepository.save(jobEntity);
+        if (user.getJobsCreated() == null) user.setJobsCreated(new HashSet<>());
         user.getJobsCreated().add(jobSaved);
         userRepository.save(user);
         return jobSaved;
@@ -49,9 +56,6 @@ public class JobService {
                     .state(jobNew.getAddress().getState() == null ? jobOld.getAddress().getState() : jobNew.getAddress().getState())
                     .city(jobNew.getAddress().getCity() == null ? jobOld.getAddress().getCity() : jobNew.getAddress().getCity())
                     .neighborhood(jobNew.getAddress().getNeighborhood() == null ? jobOld.getAddress().getNeighborhood() : jobNew.getAddress().getNeighborhood())
-                    .street(jobNew.getAddress().getStreet() == null ? jobOld.getAddress().getStreet() : jobNew.getAddress().getStreet())
-                    .postalCode(jobNew.getAddress().getPostalCode() == null ? jobOld.getAddress().getPostalCode() : jobNew.getAddress().getPostalCode())
-                    .number(jobNew.getAddress().getNumber() == null ? jobOld.getAddress().getNumber() : jobNew.getAddress().getNumber())
                     .complement(jobNew.getAddress().getComplement() == null ? jobOld.getAddress().getComplement() : jobNew.getAddress().getComplement())
                     .build();
 

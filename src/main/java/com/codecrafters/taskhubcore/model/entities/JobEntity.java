@@ -18,8 +18,6 @@ public class JobEntity {
     private String id;
     @Field(name = "titulo")
     private String title;
-    @Field(name = "endereco")
-    private AddressEntity address;
     @Field(name = "momento")
     private String moment;
     @Field(name = "detalhes")
@@ -30,6 +28,8 @@ public class JobEntity {
     private Double payment;
     @Field(name = "disponibilidade")
     private Boolean available;
+    @Field(name = "endereco")
+    private AddressEntity address;
     @Field(name = "criador")
     private UserEntity crafter;
     @Field(name = "inscritos")

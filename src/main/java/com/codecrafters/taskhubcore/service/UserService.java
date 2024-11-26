@@ -7,6 +7,7 @@ import com.codecrafters.taskhubcore.model.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -24,19 +25,23 @@ public class UserService {
     }
 
     public UserEntity subscribeJob(String userId, String jobId) {
-        JobEntity jobEntity = jobRepository.findById(jobId).orElseThrow();
-        UserEntity userEntity = userRepository.findById(userId).orElseThrow();
-        jobEntity.getSubscribers().add(userEntity);
-        userEntity.getJobsSubscribed().add(jobEntity);
-        return userRepository.save(userEntity);
+        JobEntity job = jobRepository.findById(jobId).orElseThrow();
+        UserEntity user = userRepository.findById(userId).orElseThrow();
+        if (user.getJobsSubscribed() == null) user.setJobsSubscribed(new HashSet<>());
+        if (job.getSubscribers() == null) job.setSubscribers(new HashSet<>());
+        job.getSubscribers().add(user);
+        user.getJobsSubscribed().add(job);
+        return userRepository.save(user);
     }
 
     public UserEntity unsubscribeJob(String userId, String jobId) {
-        JobEntity jobEntity = jobRepository.findById(jobId).orElseThrow();
-        UserEntity userEntity = userRepository.findById(userId).orElseThrow();
-        jobEntity.getSubscribers().remove(userEntity);
-        userEntity.getJobsSubscribed().remove(jobEntity);
-        return userRepository.save(userEntity);
+        JobEntity job = jobRepository.findById(jobId).orElseThrow();
+        UserEntity user = userRepository.findById(userId).orElseThrow();
+        if (user.getJobsSubscribed() == null) user.setJobsSubscribed(new HashSet<>());
+        if (job.getSubscribers() == null) job.setSubscribers(new HashSet<>());
+        job.getSubscribers().remove(user);
+        user.getJobsSubscribed().remove(job);
+        return userRepository.save(user);
     }
 
     public Boolean login(UserEntity userEntity) {
@@ -59,6 +64,7 @@ public class UserService {
         userOld.setName(userNew.getName() == null ? userOld.getName() : userNew.getName());
         userOld.setEmail(userNew.getEmail() == null ? userOld.getEmail() : userNew.getEmail());
         userOld.setPassword(userNew.getPassword() == null ? userOld.getPassword() : userNew.getPassword());
+        userOld.setPhone(userNew.getPhone() == null ? userOld.getPhone() : userNew.getPhone());
         return userRepository.save(userOld);
     }
 

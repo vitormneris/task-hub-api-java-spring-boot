@@ -7,11 +7,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/trabalhos")
 public class JobController {
     private final JobService jobService;
+
+    @GetMapping("/todos")
+    public ResponseEntity<List<JobEntity>> findAll() {
+        return ResponseEntity.ok().body(jobService.findAll());
+    }
 
     @GetMapping("/{id}/encontrar-id")
     public ResponseEntity<JobEntity> findById(@PathVariable("id") String id) {
