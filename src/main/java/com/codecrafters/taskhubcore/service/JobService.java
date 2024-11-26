@@ -41,6 +41,7 @@ public class JobService {
     public JobDTO updateAvailable(String id) {
         JobEntity job = jobRepository.findById(id).orElseThrow();
         job.setAvailable(!job.getAvailable());
+        jobRepository.save(job);
         return mapper.toDTO(job);
     }
 
