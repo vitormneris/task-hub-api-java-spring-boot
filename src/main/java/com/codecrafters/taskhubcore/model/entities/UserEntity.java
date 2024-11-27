@@ -27,6 +27,8 @@ public class UserEntity {
     private String phone;
     @Field(name = "senha")
     private String password;
+    @Field(name = "imagem")
+    private String imageUrl;
     @Field(name = "trabalhos_criado")
     private Set<String> jobsIdCreated  = new HashSet<>();
     @Field(name = "trabalhos_inscrito")

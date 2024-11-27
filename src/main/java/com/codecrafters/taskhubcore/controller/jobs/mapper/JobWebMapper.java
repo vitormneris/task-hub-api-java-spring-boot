@@ -53,6 +53,7 @@ public class JobWebMapper {
                 .crafter(UserDTO.builder()
                         .id(crafter.getId())
                         .name(crafter.getName())
+                        .imageUrl(crafter.getImageUrl())
                         .phone(crafter.getPhone())
                         .email(crafter.getEmail())
                         .build())
@@ -63,6 +64,7 @@ public class JobWebMapper {
                             return UserDTO.builder()
                                     .id(userEntity.getId())
                                     .name(userEntity.getName())
+                                    .imageUrl(userEntity.getImageUrl())
                                     .phone(userEntity.getPhone())
                                     .email(userEntity.getEmail())
                                     .build();

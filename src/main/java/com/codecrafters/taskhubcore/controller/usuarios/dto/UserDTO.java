@@ -12,6 +12,7 @@ public record UserDTO(
         String email,
         String phone,
         String password,
+        String imageUrl,
         Set<JobDTO> jobsCreated,
         Set<JobDTO> jobsSubscribed) {
 }
