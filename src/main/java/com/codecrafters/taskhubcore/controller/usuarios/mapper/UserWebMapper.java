@@ -23,6 +23,7 @@ public class UserWebMapper {
                 .name(userDTO.name())
                 .phone(userDTO.phone())
                 .email(userDTO.email())
+                .imageUrl(userDTO.imageUrl())
                 .password(userDTO.password())
                 .build();
     }
@@ -33,6 +34,7 @@ public class UserWebMapper {
                 .name(userEntity.getName())
                 .phone(userEntity.getPhone())
                 .email(userEntity.getEmail())
+                .imageUrl(userEntity.getImageUrl())
                 .password(userEntity.getPassword())
                 .jobsCreated(userEntity.getJobsIdCreated() == null ? new HashSet<>() : userEntity.getJobsIdCreated().stream()
                         .map(id -> {
@@ -51,6 +53,7 @@ public class UserWebMapper {
                                     .crafter(UserDTO.builder()
                                             .id(crafter.getId())
                                             .name(crafter.getName())
+                                            .imageUrl(crafter.getImageUrl())
                                             .phone(crafter.getPhone())
                                             .email(crafter.getEmail())
                                             .build())
@@ -62,6 +65,7 @@ public class UserWebMapper {
                                                         .id(user.getId())
                                                         .name(user.getName())
                                                         .phone(user.getPhone())
+                                                        .imageUrl(user.getImageUrl())
                                                         .email(user.getEmail())
                                                         .build();
                                             }).collect(Collectors.toSet()))
@@ -88,6 +92,7 @@ public class UserWebMapper {
                                             .id(crafter.getId())
                                             .name(crafter.getName())
                                             .phone(crafter.getPhone())
+                                            .imageUrl(crafter.getImageUrl())
                                             .email(crafter.getEmail())
                                             .build())
                                     .build();

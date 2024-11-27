@@ -30,6 +30,9 @@ public class UserService {
     public UserDTO subscribeJob(String userId, String jobId) {
         JobEntity job = jobRepository.findById(jobId).orElseThrow();
         UserEntity user = userRepository.findById(userId).orElseThrow();
+
+        if (job.getSubscribersId().contains(userId)) return null;
+
         job.getSubscribersId().add(user.getId());
         user.getJobsIdSubscribed().add(job.getId());
         jobRepository.save(job);
@@ -61,9 +64,17 @@ public class UserService {
 
     public UserDTO update(UserDTO userNew, String id) {
         UserEntity userOld = userRepository.findById(id).orElseThrow();
+
+        if (userNew.email() != null && !userNew.email().equals(userOld.getEmail())) {
+            if (userRepository.findByEmail(userNew.email()).isPresent()) {
+                return null;
+            }
+        }
+
         userOld.setName(userNew.name() == null ? userOld.getName() : userNew.name());
         userOld.setEmail(userNew.email() == null ? userOld.getEmail() : userNew.email());
         userOld.setPassword(userNew.password() == null ? userOld.getPassword() : userNew.password());
+        userOld.setImageUrl(userNew.imageUrl() == null ? userOld.getImageUrl() : userNew.imageUrl());
         userOld.setPhone(userNew.phone() == null ? userOld.getPhone() : userNew.phone());
         return mapper.toDTO(userRepository.save(userOld));
     }

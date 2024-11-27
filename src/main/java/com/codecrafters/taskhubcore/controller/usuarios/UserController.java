@@ -25,7 +25,11 @@ public class UserController {
 
     @PatchMapping("/{userId}/{jobId}/inscrever")
     public ResponseEntity<UserDTO> subscribeJob(@PathVariable("userId") String userId, @PathVariable("jobId") String jobId) {
-        return ResponseEntity.ok().body(userService.subscribeJob(userId, jobId));
+        UserDTO userDTO = userService.subscribeJob(userId, jobId);
+        if (userDTO == null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+        return ResponseEntity.ok().body(userDTO);
     }
 
     @PatchMapping("/{userId}/{jobId}/desinscrever")
@@ -49,7 +53,11 @@ public class UserController {
 
     @PutMapping("/{id}/atualizar")
     public ResponseEntity<UserDTO> update(@PathVariable("id") String id, @RequestBody UserDTO user) {
-        return ResponseEntity.ok().body(userService.update(user, id));
+        UserDTO userDTO = userService.update(user, id);
+        if (userDTO == null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+        return ResponseEntity.ok().body(userDTO);
     }
 
     @DeleteMapping("/{id}/deletar")
