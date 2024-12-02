@@ -25,11 +25,7 @@ public class UserController {
 
     @PatchMapping("/{userId}/{jobId}/inscrever")
     public ResponseEntity<UserDTO> subscribeJob(@PathVariable("userId") String userId, @PathVariable("jobId") String jobId) {
-        UserDTO userDTO = userService.subscribeJob(userId, jobId);
-        if (userDTO == null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
-        return ResponseEntity.ok().body(userDTO);
+        return ResponseEntity.ok().body(userService.subscribeJob(userId, jobId));
     }
 
     @PatchMapping("/{userId}/{jobId}/desinscrever")
@@ -44,20 +40,12 @@ public class UserController {
 
     @PostMapping("/inserir")
     public ResponseEntity<UserDTO> insert(@RequestBody UserDTO user) {
-        UserDTO userDTO = userService.save(user);
-        if (userDTO == null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
-        return ResponseEntity.status(HttpStatus.CREATED).body(userDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(user));
     }
 
     @PutMapping("/{id}/atualizar")
     public ResponseEntity<UserDTO> update(@PathVariable("id") String id, @RequestBody UserDTO user) {
-        UserDTO userDTO = userService.update(user, id);
-        if (userDTO == null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
-        return ResponseEntity.ok().body(userDTO);
+        return ResponseEntity.ok().body(userService.update(user, id));
     }
 
     @DeleteMapping("/{id}/deletar")
