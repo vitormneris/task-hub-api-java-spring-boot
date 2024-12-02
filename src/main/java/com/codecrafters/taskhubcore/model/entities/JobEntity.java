@@ -1,11 +1,7 @@
 package com.codecrafters.taskhubcore.model.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,28 +9,33 @@ import java.util.Set;
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor
+@Entity
 @NoArgsConstructor
-@Document(collection = "trabalhos")
+@AllArgsConstructor
+@Table(name = "tb_trabalhos")
 public class JobEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-    @Field(name = "titulo")
+    @Column(name = "titulo")
     private String title;
-    @Field(name = "momento")
+    @Column(name = "momento")
     private String moment;
-    @Field(name = "detalhes")
+    @Column(name = "detalhes")
     private String details;
-    @Field(name = "imagem_url")
+    @Column(name = "imagem_url")
     private String imageUrl;
-    @Field(name = "pagamento")
+    @Column(name = "pagamento")
     private Double payment;
-    @Field(name = "disponibilidade")
+    @Column(name = "disponibilidade")
     private Boolean available;
-    @Field(name = "endereco")
+    @Column(name = "endereco")
     private String address;
-    @Field(name = "criador")
-    private String crafterId;
-    @Field(name = "inscritos")
-    private Set<String> subscribersId = new HashSet<>();
+
+    @ManyToOne
+    @JoinColumn(name = "criador_id")
+    private UserEntity crafter;
+
+    @ManyToMany(mappedBy = "jobsSubscribed")
+    private Set<UserEntity> subscribers = new HashSet<>();
 }

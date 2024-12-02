@@ -2,21 +2,14 @@ package com.codecrafters.taskhubcore.controller.usuarios.mapper;
 
 import com.codecrafters.taskhubcore.controller.jobs.dto.JobDTO;
 import com.codecrafters.taskhubcore.controller.usuarios.dto.UserDTO;
-import com.codecrafters.taskhubcore.model.entities.JobEntity;
 import com.codecrafters.taskhubcore.model.entities.UserEntity;
-import com.codecrafters.taskhubcore.model.repositories.JobRepository;
-import com.codecrafters.taskhubcore.model.repositories.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.stream.Collectors;
 
 @Component
-@RequiredArgsConstructor
 public class UserWebMapper {
-    private final JobRepository jobRepository;
-    private final UserRepository userRepository;
 
     public UserEntity toEntity(UserDTO userDTO) {
         return UserEntity.builder()
@@ -36,67 +29,53 @@ public class UserWebMapper {
                 .email(userEntity.getEmail())
                 .imageUrl(userEntity.getImageUrl())
                 .password(userEntity.getPassword())
-                .jobsCreated(userEntity.getJobsIdCreated() == null ? new HashSet<>() : userEntity.getJobsIdCreated().stream()
-                        .map(id -> {
-                            JobEntity jobEntity = jobRepository.findById(id).orElseThrow();
-                            UserEntity crafter = userRepository.findById(jobEntity.getCrafterId()).orElseThrow();
+                .jobsCreated(userEntity.getJobsCreated() == null ? new HashSet<>() : userEntity.getJobsCreated().stream()
+                        .map(job -> JobDTO.builder()
+                                .id(job.getId())
+                                .title(job.getTitle())
+                                .moment(job.getMoment())
+                                .details(job.getDetails())
+                                .imageUrl(job.getImageUrl())
+                                .payment(job.getPayment())
+                                .available(job.getAvailable())
+                                .address(job.getAddress())
+                                .crafter(UserDTO.builder()
+                                        .id(job.getCrafter().getId())
+                                        .name(job.getCrafter().getName())
+                                        .imageUrl(job.getCrafter().getImageUrl())
+                                        .phone(job.getCrafter().getPhone())
+                                        .email(job.getCrafter().getEmail())
+                                        .build())
 
-                            return JobDTO.builder()
-                                    .id(jobEntity.getId())
-                                    .title(jobEntity.getTitle())
-                                    .moment(jobEntity.getMoment())
-                                    .details(jobEntity.getDetails())
-                                    .imageUrl(jobEntity.getImageUrl())
-                                    .payment(jobEntity.getPayment())
-                                    .available(jobEntity.getAvailable())
-                                    .address(jobEntity.getAddress())
-                                    .crafter(UserDTO.builder()
-                                            .id(crafter.getId())
-                                            .name(crafter.getName())
-                                            .imageUrl(crafter.getImageUrl())
-                                            .phone(crafter.getPhone())
-                                            .email(crafter.getEmail())
-                                            .build())
-
-                                    .subscribers(jobEntity.getSubscribersId().stream()
-                                            .map(idUser -> {
-                                                UserEntity user = userRepository.findById(idUser).orElseThrow();
-                                                return UserDTO.builder()
-                                                        .id(user.getId())
-                                                        .name(user.getName())
-                                                        .phone(user.getPhone())
-                                                        .imageUrl(user.getImageUrl())
-                                                        .email(user.getEmail())
-                                                        .build();
-                                            }).collect(Collectors.toSet()))
-                                    .build();
-                        })
+                                .subscribers(job.getSubscribers().stream()
+                                        .map(user -> UserDTO.builder()
+                                                .id(user.getId())
+                                                .name(user.getName())
+                                                .phone(user.getPhone())
+                                                .imageUrl(user.getImageUrl())
+                                                .email(user.getEmail())
+                                                .build()).collect(Collectors.toSet()))
+                                .build())
                         .collect(Collectors.toSet()))
 
-                .jobsSubscribed(userEntity.getJobsIdSubscribed() == null ? new HashSet<>() : userEntity.getJobsIdSubscribed().stream()
-                        .map(id -> {
-                            JobEntity jobEntity = jobRepository.findById(id).orElseThrow();
-
-                            UserEntity crafter = userRepository.findById(jobEntity.getCrafterId()).orElseThrow();
-
-                            return JobDTO.builder()
-                                    .id(jobEntity.getId())
-                                    .title(jobEntity.getTitle())
-                                    .moment(jobEntity.getMoment())
-                                    .details(jobEntity.getDetails())
-                                    .imageUrl(jobEntity.getImageUrl())
-                                    .payment(jobEntity.getPayment())
-                                    .available(jobEntity.getAvailable())
-                                    .address(jobEntity.getAddress())
-                                    .crafter(UserDTO.builder()
-                                            .id(crafter.getId())
-                                            .name(crafter.getName())
-                                            .phone(crafter.getPhone())
-                                            .imageUrl(crafter.getImageUrl())
-                                            .email(crafter.getEmail())
-                                            .build())
-                                    .build();
-                        })
+                .jobsSubscribed(userEntity.getJobsSubscribed() == null ? new HashSet<>() : userEntity.getJobsSubscribed().stream()
+                        .map(jobUser -> JobDTO.builder()
+                                .id(jobUser.getId())
+                                .title(jobUser.getTitle())
+                                .moment(jobUser.getMoment())
+                                .details(jobUser.getDetails())
+                                .imageUrl(jobUser.getImageUrl())
+                                .payment(jobUser.getPayment())
+                                .available(jobUser.getAvailable())
+                                .address(jobUser.getAddress())
+                                .crafter(UserDTO.builder()
+                                        .id(jobUser.getCrafter().getId())
+                                        .name(jobUser.getCrafter().getName())
+                                        .phone(jobUser.getCrafter().getPhone())
+                                        .imageUrl(jobUser.getCrafter().getImageUrl())
+                                        .email(jobUser.getCrafter().getEmail())
+                                        .build())
+                                .build())
                         .collect(Collectors.toSet()))
                 .build();
     }

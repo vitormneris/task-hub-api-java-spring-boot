@@ -1,11 +1,7 @@
 package com.codecrafters.taskhubcore.model.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,24 +9,29 @@ import java.util.Set;
 
 @Getter
 @Setter
+@Entity
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "usuarios")
+@AllArgsConstructor
+@Table(name = "tb_usuarios")
 public class UserEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-    @Field(name = "nome")
+    @Column(name = "nome")
     private String name;
     private String email;
-    @Field(name = "telefone")
+    @Column(name = "telefone")
     private String phone;
-    @Field(name = "senha")
+    @Column(name = "senha")
     private String password;
-    @Field(name = "imagem")
+    @Column(name = "imagem")
     private String imageUrl;
-    @Field(name = "trabalhos_criado")
-    private Set<String> jobsIdCreated  = new HashSet<>();
-    @Field(name = "trabalhos_inscrito")
-    private Set<String> jobsIdSubscribed  = new HashSet<>();
+
+    @OneToMany(mappedBy = "crafter")
+    private Set<JobEntity> jobsCreated  = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(name = "tb_inscrito_trabalho", joinColumns = @JoinColumn(name = "inscrito_id"), inverseJoinColumns = @JoinColumn(name = "trabalho_id"))
+    private Set<JobEntity> jobsSubscribed  = new HashSet<>();
 }

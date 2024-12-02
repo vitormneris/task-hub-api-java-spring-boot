@@ -6,58 +6,57 @@ import com.codecrafters.taskhubcore.model.entities.JobEntity;
 import com.codecrafters.taskhubcore.model.entities.UserEntity;
 import com.codecrafters.taskhubcore.model.repositories.JobRepository;
 import com.codecrafters.taskhubcore.model.repositories.UserRepository;
+import com.codecrafters.taskhubcore.utils.enums.RuntimeErrorEnum;
+import com.codecrafters.taskhubcore.configuration.advice.exceptions.DataIntegrationViolatedException;
+import com.codecrafters.taskhubcore.configuration.advice.exceptions.NotAuthorizedException;
+import com.codecrafters.taskhubcore.configuration.advice.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final JobRepository jobRepository;
     private final UserRepository userRepository;
-    private final JobService jobService;
     private final UserWebMapper mapper;
 
     public UserDTO findById(String id) {
-        return mapper.toDTO(userRepository.findById(id).orElseThrow());
+        return mapper.toDTO(userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(RuntimeErrorEnum.ERR0001)));
     }
 
     public UserDTO findByEmail(String email) {
-        return mapper.toDTO(userRepository.findByEmail(email).orElseThrow());
+        return mapper.toDTO(userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException(RuntimeErrorEnum.ERR0001)));
     }
 
     public UserDTO subscribeJob(String userId, String jobId) {
-        JobEntity job = jobRepository.findById(jobId).orElseThrow();
-        UserEntity user = userRepository.findById(userId).orElseThrow();
+        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException(RuntimeErrorEnum.ERR0001));
+        JobEntity job = jobRepository.findById(jobId).orElseThrow(() -> new ResourceNotFoundException(RuntimeErrorEnum.ERR0002));
 
-        if (job.getSubscribersId().contains(userId)) return null;
+        if (job.getSubscribers().contains(user)) throw new DataIntegrationViolatedException(RuntimeErrorEnum.ERR0005);
 
-        job.getSubscribersId().add(user.getId());
-        user.getJobsIdSubscribed().add(job.getId());
-        jobRepository.save(job);
+        user.getJobsSubscribed().add(job);
         return mapper.toDTO(userRepository.save(user));
     }
 
     public UserDTO unsubscribeJob(String userId, String jobId) {
-        JobEntity job = jobRepository.findById(jobId).orElseThrow();
-        UserEntity user = userRepository.findById(userId).orElseThrow();
-        job.getSubscribersId().remove(user.getId());
-        user.getJobsIdSubscribed().remove(job.getId());
-        jobRepository.save(job);
+        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException(RuntimeErrorEnum.ERR0001));
+        JobEntity job = jobRepository.findById(jobId).orElseThrow(() -> new ResourceNotFoundException(RuntimeErrorEnum.ERR0002));
+
+        if (!job.getSubscribers().contains(user)) throw new DataIntegrationViolatedException(RuntimeErrorEnum.ERR0006);
+
+        user.getJobsSubscribed().remove(job);
         return mapper.toDTO(userRepository.save(user));
     }
 
     public Boolean login(UserDTO userDTO) {
-        UserEntity entity = userRepository.findByEmail(userDTO.email()).orElse(null);
-        if (entity != null) {
-            return entity.getPassword().equals(userDTO.password());
-        } else return false;
+        UserEntity entity = userRepository.findByEmail(userDTO.email()).orElseThrow(() -> new NotAuthorizedException(RuntimeErrorEnum.ERR0003));
+        if (!entity.getPassword().equals(userDTO.password())) throw new NotAuthorizedException(RuntimeErrorEnum.ERR0003);
+        return true;
     }
 
     public UserDTO save(UserDTO userDTO) {
         if (userRepository.findByEmail(userDTO.email()).isPresent()) {
-            return null;
+            throw new DataIntegrationViolatedException(RuntimeErrorEnum.ERR0004);
         }
         return mapper.toDTO(userRepository.save(mapper.toEntity(userDTO)));
     }
@@ -67,7 +66,7 @@ public class UserService {
 
         if (userNew.email() != null && !userNew.email().equals(userOld.getEmail())) {
             if (userRepository.findByEmail(userNew.email()).isPresent()) {
-                return null;
+                throw new DataIntegrationViolatedException(RuntimeErrorEnum.ERR0004);
             }
         }
 
@@ -80,11 +79,6 @@ public class UserService {
     }
 
     public void delete(String id) {
-        UserEntity userEntity = userRepository.findById(id).orElseThrow();
-        userEntity.getJobsIdCreated().forEach(jobService::delete);
-        List<JobEntity> jobs = jobRepository.findAllById(userEntity.getJobsIdSubscribed());
-        jobs.forEach(job -> job.getSubscribersId().remove(userEntity.getId()));
-        jobRepository.saveAll(jobs);
         userRepository.deleteById(id);
     }
 }
