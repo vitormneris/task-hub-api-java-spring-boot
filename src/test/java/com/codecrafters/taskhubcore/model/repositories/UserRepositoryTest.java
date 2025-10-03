@@ -1,6 +1,7 @@
 package com.codecrafters.taskhubcore.model.repositories;
 
-import com.codecrafters.taskhubcore.model.entities.UserEntity;
+import com.codecrafters.taskhubcore.model.UserEntity;
+import com.codecrafters.taskhubcore.repositories.UserRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

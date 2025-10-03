@@ -1,15 +1,15 @@
 package com.codecrafters.taskhubcore.service;
 
-import com.codecrafters.taskhubcore.controller.usuarios.dto.UserDTO;
-import com.codecrafters.taskhubcore.controller.usuarios.mapper.UserWebMapper;
-import com.codecrafters.taskhubcore.model.entities.JobEntity;
-import com.codecrafters.taskhubcore.model.entities.UserEntity;
-import com.codecrafters.taskhubcore.model.repositories.JobRepository;
-import com.codecrafters.taskhubcore.model.repositories.UserRepository;
-import com.codecrafters.taskhubcore.utils.enums.RuntimeErrorEnum;
-import com.codecrafters.taskhubcore.configuration.advice.exceptions.DataIntegrationViolatedException;
-import com.codecrafters.taskhubcore.configuration.advice.exceptions.NotAuthorizedException;
-import com.codecrafters.taskhubcore.configuration.advice.exceptions.ResourceNotFoundException;
+import com.codecrafters.taskhubcore.controller.user.dto.UserDTO;
+import com.codecrafters.taskhubcore.controller.user.mapper.UserWebMapper;
+import com.codecrafters.taskhubcore.model.JobEntity;
+import com.codecrafters.taskhubcore.model.UserEntity;
+import com.codecrafters.taskhubcore.repositories.JobRepository;
+import com.codecrafters.taskhubcore.repositories.UserRepository;
+import com.codecrafters.taskhubcore.enums.RuntimeErrorEnum;
+import com.codecrafters.taskhubcore.exceptions.DataIntegrationViolatedException;
+import com.codecrafters.taskhubcore.exceptions.NotAuthorizedException;
+import com.codecrafters.taskhubcore.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

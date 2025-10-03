@@ -1,4 +1,4 @@
-package com.codecrafters.taskhubcore.configuration.advice.dto;
+package com.codecrafters.taskhubcore.controller.handler.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;

@@ -1,8 +1,8 @@
-package com.codecrafters.taskhubcore.controller.usuarios.mapper;
+package com.codecrafters.taskhubcore.controller.user.mapper;
 
-import com.codecrafters.taskhubcore.controller.jobs.dto.JobDTO;
-import com.codecrafters.taskhubcore.controller.usuarios.dto.UserDTO;
-import com.codecrafters.taskhubcore.model.entities.UserEntity;
+import com.codecrafters.taskhubcore.controller.job.dto.JobDTO;
+import com.codecrafters.taskhubcore.controller.user.dto.UserDTO;
+import com.codecrafters.taskhubcore.model.UserEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;

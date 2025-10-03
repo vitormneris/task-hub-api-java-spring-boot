@@ -1,7 +1,6 @@
-package com.codecrafters.taskhubcore.controller.jobs;
+package com.codecrafters.taskhubcore.controller.job;
 
-import com.codecrafters.taskhubcore.controller.jobs.dto.JobDTO;
-import com.codecrafters.taskhubcore.model.entities.JobEntity;
+import com.codecrafters.taskhubcore.controller.job.dto.JobDTO;
 import com.codecrafters.taskhubcore.service.JobService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

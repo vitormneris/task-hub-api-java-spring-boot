@@ -1,10 +1,10 @@
-package com.codecrafters.taskhubcore.configuration.advice;
+package com.codecrafters.taskhubcore.controller.handler;
 
-import com.codecrafters.taskhubcore.configuration.advice.dto.ErrorMessageDTO;
-import com.codecrafters.taskhubcore.configuration.advice.exceptions.DataIntegrationViolatedException;
-import com.codecrafters.taskhubcore.configuration.advice.exceptions.NotAuthorizedException;
-import com.codecrafters.taskhubcore.configuration.advice.exceptions.ResourceNotFoundException;
-import com.codecrafters.taskhubcore.utils.enums.RuntimeErrorEnum;
+import com.codecrafters.taskhubcore.controller.handler.dto.ErrorMessageDTO;
+import com.codecrafters.taskhubcore.exceptions.DataIntegrationViolatedException;
+import com.codecrafters.taskhubcore.exceptions.NotAuthorizedException;
+import com.codecrafters.taskhubcore.exceptions.ResourceNotFoundException;
+import com.codecrafters.taskhubcore.enums.RuntimeErrorEnum;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

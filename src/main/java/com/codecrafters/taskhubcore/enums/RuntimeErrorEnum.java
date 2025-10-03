@@ -1,4 +1,4 @@
-package com.codecrafters.taskhubcore.utils.enums;
+package com.codecrafters.taskhubcore.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
-package com.codecrafters.taskhubcore.model.repositories;
+package com.codecrafters.taskhubcore.repositories;
 
-import com.codecrafters.taskhubcore.model.entities.UserEntity;
+import com.codecrafters.taskhubcore.model.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -1,11 +1,11 @@
 package com.codecrafters.taskhubcore.service;
 
-import com.codecrafters.taskhubcore.controller.jobs.dto.JobDTO;
-import com.codecrafters.taskhubcore.controller.jobs.mapper.JobWebMapper;
-import com.codecrafters.taskhubcore.model.entities.JobEntity;
-import com.codecrafters.taskhubcore.model.repositories.JobRepository;
-import com.codecrafters.taskhubcore.utils.enums.RuntimeErrorEnum;
-import com.codecrafters.taskhubcore.configuration.advice.exceptions.ResourceNotFoundException;
+import com.codecrafters.taskhubcore.controller.job.dto.JobDTO;
+import com.codecrafters.taskhubcore.controller.job.mapper.JobWebMapper;
+import com.codecrafters.taskhubcore.model.JobEntity;
+import com.codecrafters.taskhubcore.repositories.JobRepository;
+import com.codecrafters.taskhubcore.enums.RuntimeErrorEnum;
+import com.codecrafters.taskhubcore.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

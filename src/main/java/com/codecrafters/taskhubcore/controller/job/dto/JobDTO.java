@@ -1,6 +1,6 @@
-package com.codecrafters.taskhubcore.controller.jobs.dto;
+package com.codecrafters.taskhubcore.controller.job.dto;
 
-import com.codecrafters.taskhubcore.controller.usuarios.dto.UserDTO;
+import com.codecrafters.taskhubcore.controller.user.dto.UserDTO;
 import lombok.Builder;
 
 import java.util.Set;

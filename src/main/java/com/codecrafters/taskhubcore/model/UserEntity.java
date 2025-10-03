@@ -1,4 +1,4 @@
-package com.codecrafters.taskhubcore.model.entities;
+package com.codecrafters.taskhubcore.model;
 
 import jakarta.persistence.*;
 import lombok.*;

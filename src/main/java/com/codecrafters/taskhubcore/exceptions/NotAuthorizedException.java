@@ -1,6 +1,6 @@
-package com.codecrafters.taskhubcore.configuration.advice.exceptions;
+package com.codecrafters.taskhubcore.exceptions;
 
-import com.codecrafters.taskhubcore.utils.enums.RuntimeErrorEnum;
+import com.codecrafters.taskhubcore.enums.RuntimeErrorEnum;
 import lombok.Getter;
 
 @Getter

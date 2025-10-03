@@ -1,6 +1,6 @@
-package com.codecrafters.taskhubcore.controller.usuarios;
+package com.codecrafters.taskhubcore.controller.user;
 
-import com.codecrafters.taskhubcore.controller.usuarios.dto.UserDTO;
+import com.codecrafters.taskhubcore.controller.user.dto.UserDTO;
 import com.codecrafters.taskhubcore.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
